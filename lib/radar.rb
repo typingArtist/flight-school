@@ -18,12 +18,18 @@ class Radar
     raise NoSuchAirport if res.code == "404"
 
     decoded = JSON.parse(res.body)
+    weather_pre = decoded.fetch("weather")
+    if weather_pre.has_key? "weather"
+      weather = weather_pre.fetch("weather")
+    else
+      weather = "Overcast"
+    end
 
     Status.new(
       decoded.fetch("IATA"),
       decoded.fetch("name"),
       decoded.fetch("city"),
-      decoded.fetch("weather").fetch("weather"),
+      weather,
     )
   end
 end
